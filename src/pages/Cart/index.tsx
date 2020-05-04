@@ -47,17 +47,26 @@ const Cart: React.FC = () => {
   }
 
   const cartTotal = useMemo(() => {
-    const totalProduct = products.reduce((accumulator, product) => {
-      return accumulator + product.price * product.quantity;
-    }, 0);
-
-    return formatValue(totalProduct);
+    const total = products.reduce(
+      (accumulator, product) => {
+        accumulator.count += product.price * product.quantity;
+        return accumulator;
+      },
+      { count: 0 },
+    );
+    return formatValue(total.count);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const quantity = products.reduce(
+      (accumulator, product) => {
+        accumulator.count += product.quantity;
+        return accumulator;
+      },
+      { count: 0 },
+    );
 
-    return 0;
+    return quantity.count;
   }, [products]);
 
   return (
@@ -65,12 +74,12 @@ const Cart: React.FC = () => {
       <ProductContainer>
         <ProductList
           data={products}
-          keyExtractor={item => item.id}
+          keyExtractor={(item: any) => item.id}
           ListFooterComponent={<View />}
           ListFooterComponentStyle={{
             height: 80,
           }}
-          renderItem={({ item }: { item: Product }) => (
+          renderItem={({ item }: any) => (
             <Product>
               <ProductImage source={{ uri: item.image_url }} />
               <ProductTitleContainer>
